@@ -3,4 +3,4 @@ By this tool, you can make surface mesh (input data of TetGen) for creating tetr
 
 Sample input files of meshing tools can be downloaded from the web folder below.
 
-[Sample inputs](drive.google.com/drive/folders/1eQsbADsvHQ3EvEQshbZhG9Pv57NLivkM?usp=sharing)
+https://drive.google.com/drive/folders/1eQsbADsvHQ3EvEQshbZhG9Pv57NLivkM?usp=sharing

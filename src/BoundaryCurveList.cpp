@@ -1056,7 +1056,11 @@ void BoundaryCurveList::makeBoundaryCurvesCoastLine(){
 		nodeIDs.push_back( m_nodeList.addNewNode( Node( coordLowerLeft,  true ) ) );
 		addNodesBetweenTwoPoins( coordLowerLeft, coordUpperLeft, nodeIDs );
 
-		m_outerBoundaries.push_back( BoundaryCurveOuter( nodeIDs, CommonParameters::LAND) );
+		if( m_innerBoundaries.empty() ){
+			m_outerBoundaries.push_back( BoundaryCurveOuter( nodeIDs, CommonParameters::LAND) );
+		}else{
+			m_outerBoundaries.push_back( BoundaryCurveOuter( nodeIDs, CommonParameters::SEA) );
+		}
 
 		return;
 	}

@@ -72,7 +72,7 @@ const static double DEG2RAD = PI / 180.0;
 
 static char programName[]="makeTetraMesh";
 
-static char version[]="v1.3";
+static char version[]="v1.3.1";
 
 }
 

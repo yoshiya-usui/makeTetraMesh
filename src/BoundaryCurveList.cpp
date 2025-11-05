@@ -1451,8 +1451,9 @@ void BoundaryCurveList::relateSubInnerBoundToInnerBound(){
 
 	const int numInnerBoundary = static_cast<int>( m_innerBoundaries.size() );
 
-	m_inner2SubInnerBoundaries = new std::vector<int>[numInnerBoundary];
-
+	if (numInnerBoundary > 0) {
+		m_inner2SubInnerBoundaries = new std::vector<int>[numInnerBoundary];
+	}
 
 }
 
@@ -1660,6 +1661,10 @@ void BoundaryCurveList::writeBoundaryCurveRelatios( const std::string& fileName 
 	const int numBounOuter = static_cast<int>( m_outerBoundaries.size() );
 	ofs << std::setw(10) << numBounOuter << std::endl;
 	for( int iBoun = 0; iBoun < numBounOuter; ++iBoun ){
+		if (m_outer2InnerBoundaries == NULL) {
+			ofs << std::setw(10) << 0 << std::endl;
+			continue;
+		}
 		ofs << std::setw(10) << m_outer2InnerBoundaries[iBoun].size();
 		if( m_outer2InnerBoundaries[iBoun].empty() ){
 			ofs << std::endl;
@@ -1675,6 +1680,10 @@ void BoundaryCurveList::writeBoundaryCurveRelatios( const std::string& fileName 
 
 	ofs << std::setw(10) << numBounInner << std::endl;
 	for( int iBoun = 0; iBoun < numBounInner; ++iBoun ){
+		if (m_inner2SubInnerBoundaries == NULL) {
+			ofs << std::setw(10) << 0 << std::endl;
+			continue;
+		}
 		ofs << std::setw(10) << m_inner2SubInnerBoundaries[iBoun].size();
 		if( m_inner2SubInnerBoundaries[iBoun].empty() ){
 			ofs << std::endl;
@@ -1785,30 +1794,34 @@ void BoundaryCurveList::readBoundaryCurveRelatios( const std::string& fileName )
 
 	int numBounOuter(0);
 	ifs >> numBounOuter;
-	m_outer2InnerBoundaries = new std::vector<int>[numBounOuter];
-	for( int iBoun = 0; iBoun < numBounOuter; ++iBoun ){
-		int nInner(0);
-		ifs >> nInner;
-		for( int i = 0; i < nInner; ++i ){
-			int iInner(0);
-			ifs >> iInner;
-			m_outer2InnerBoundaries[iBoun].push_back(iInner);
+	if (numBounOuter > 0) {
+		m_outer2InnerBoundaries = new std::vector<int>[numBounOuter];
+		for (int iBoun = 0; iBoun < numBounOuter; ++iBoun) {
+			int nInner(0);
+			ifs >> nInner;
+			for (int i = 0; i < nInner; ++i) {
+				int iInner(0);
+				ifs >> iInner;
+				m_outer2InnerBoundaries[iBoun].push_back(iInner);
+			}
 		}
 	}
 
 	int numBounInner(0);
 	ifs >> numBounInner;
-	m_inner2SubInnerBoundaries = new std::vector<int>[numBounInner];
-	for( int iBoun = 0; iBoun < numBounInner; ++iBoun ){
-		int nSubInner(0);
-		ifs >> nSubInner;
-		for( int i = 0; i < nSubInner; ++i ){
-			int iSubInner(0);
-			ifs >> iSubInner;
-			m_inner2SubInnerBoundaries[iBoun].push_back(iSubInner);
+	if (numBounInner > 0) {
+		m_inner2SubInnerBoundaries = new std::vector<int>[numBounInner];
+		for (int iBoun = 0; iBoun < numBounInner; ++iBoun) {
+			int nSubInner(0);
+			ifs >> nSubInner;
+			for (int i = 0; i < nSubInner; ++i) {
+				int iSubInner(0);
+				ifs >> iSubInner;
+				m_inner2SubInnerBoundaries[iBoun].push_back(iSubInner);
+			}
 		}
-	}
 
+	}
 	ifs.close();
 	
 }
@@ -1977,6 +1990,10 @@ int BoundaryCurveList::getNumInnerBoundaryIncluded( const int iBounOuter ) const
 		exit(1);
 	}
 
+	if (m_outer2InnerBoundaries == NULL) {
+		return 0;
+	}
+
 	return static_cast<int>( m_outer2InnerBoundaries[iBounOuter].size() );
 
 }
@@ -1987,6 +2004,10 @@ int BoundaryCurveList::getNumSubInnerBoundaryIncluded( const int iBounInner ) co
 	if( iBounInner < 0 || iBounInner >= getTotalNumberInnerBoundaries() ){
 		OutputFiles::m_logFile << "Error : ID of boudary is out of range !! ID = " << iBounInner << std::endl;
 		exit(1);
+	}
+
+	if (m_inner2SubInnerBoundaries == NULL) {
+		return 0;
 	}
 
 	return static_cast<int>( m_inner2SubInnerBoundaries[iBounInner].size() );
